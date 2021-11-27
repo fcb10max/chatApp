@@ -70,6 +70,7 @@ const Auth = () => {
 
   const switchMode = () => {
     setIsSignUp((prevIsSignUp) => !prevIsSignUp);
+    setError(false);
   };
 
   return (
