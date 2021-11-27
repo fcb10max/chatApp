@@ -32,7 +32,7 @@ const Auth = () => {
     const {  username, password, phoneNumber, avatarURL } = form;
     const { confirmPassword } = form;
 
-    if (confirmPassword !== password) {
+    if (isSignUp && confirmPassword!== password) {
       setError("Written passwords does not match!");
       return;
   }
