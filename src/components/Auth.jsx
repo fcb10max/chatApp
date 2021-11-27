@@ -18,9 +18,11 @@ const initialState = {
 const Auth = () => {
   const [form, setForm] = useState(initialState);
   const [isSignUp, setIsSignUp] = useState(true);
+  const [error, setError] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    if (error) setError(false);
   };
 
   const handleSubmit = async (e) => {
@@ -28,31 +30,36 @@ const Auth = () => {
 
     const {  username, password, phoneNumber, avatarURL } = form;
 
-    const URL = "https://server-chat-app0.herokuapp.com/auth";
+    // const URL = "https://server-chat-app0.herokuapp.com/auth";
+    const URL = "http://localhost:5000/auth";
 
-    const { data: { token, userId, hashedPassword, fullName } } = await axios.post(
-      `${URL}/${isSignUp ? "signup" : "login"}`,
-      {
-        username,
-        password,
-        fullName:form.fullName,
-        phoneNumber,
-        avatarURL,
+    try {
+      setError(false);
+      const { data: { token, userId, hashedPassword, fullName } } = await axios.post(
+        `${URL}/${isSignUp ? "signup" : "login"}`,
+        {
+          username,
+          password,
+          fullName:form.fullName,
+          phoneNumber,
+          avatarURL,
+        }
+      );
+      cookies.set("token", token);
+      cookies.set("username", username);
+      cookies.set("fullName", fullName);
+      cookies.set("userId", userId);
+      
+      if (isSignUp) {
+        cookies.set("phoneNumber", phoneNumber);
+        cookies.set("avatarURL", avatarURL);
+        cookies.set("hashedPassword", hashedPassword);
       }
-    );
-    cookies.set("token", token);
-    cookies.set("username", username);
-    cookies.set("fullName", fullName);
-    cookies.set("userId", userId);
-    
-    if (isSignUp) {
-      cookies.set("phoneNumber", phoneNumber);
-      cookies.set("avatarURL", avatarURL);
-      cookies.set("hashedPassword", hashedPassword);
+  
+      window.location.reload();
+    } catch (error) {
+      setError(error.response.data.message);
     }
-
-    window.location.reload();
-
   };
 
 
@@ -134,6 +141,7 @@ const Auth = () => {
                 />
               </div>
             )}
+            {!isSignUp && error && <div style={{ color: "red", fontSize: "16px"}}>{error}</div>}
             <div className="auth__form-container_fields-content_button">
               <button>{isSignUp ? "Sign in" : "Sign up"}</button>
             </div>
