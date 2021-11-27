@@ -30,8 +30,7 @@ const Auth = () => {
 
     const {  username, password, phoneNumber, avatarURL } = form;
 
-    // const URL = "https://server-chat-app0.herokuapp.com/auth";
-    const URL = "http://localhost:5000/auth";
+    const URL = "https://server-chat-app0.herokuapp.com/auth";
 
     try {
       setError(false);
