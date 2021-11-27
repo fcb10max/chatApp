@@ -26,14 +26,20 @@ const Auth = () => {
   };
 
   const handleSubmit = async (e) => {
+    setError(false);
     e.preventDefault();
 
     const {  username, password, phoneNumber, avatarURL } = form;
+    const { confirmPassword } = form;
+
+    if (confirmPassword !== password) {
+      setError("Written passwords does not match!");
+      return;
+  }
 
     const URL = "https://server-chat-app0.herokuapp.com/auth";
 
     try {
-      setError(false);
       const { data: { token, userId, hashedPassword, fullName } } = await axios.post(
         `${URL}/${isSignUp ? "signup" : "login"}`,
         {
@@ -98,7 +104,7 @@ const Auth = () => {
               <div className="auth__form-container_fields-content_input">
                 <label htmlFor="phoneNumber">Phone Number</label>
                 <input
-                  type="text"
+                  type="number"
                   name="phoneNumber"
                   placeholder="Phone Number"
                   onChange={handleChange}
@@ -110,11 +116,10 @@ const Auth = () => {
               <div className="auth__form-container_fields-content_input">
                 <label htmlFor="avatarURL">Avatar URL</label>
                 <input
-                  type="text"
+                  type="url"
                   name="avatarURL"
-                  placeholder="Avatar URL"
+                  placeholder="Avatar URL(leave blank for no avatar)"
                   onChange={handleChange}
-                  required
                 />
               </div>
             )}
@@ -140,7 +145,7 @@ const Auth = () => {
                 />
               </div>
             )}
-            {!isSignUp && error && <div style={{ color: "red", fontSize: "16px"}}>{error}</div>}
+            {error && <div style={{ color: "red", fontSize: "16px"}}>{error}</div>}
             <div className="auth__form-container_fields-content_button">
               <button>{isSignUp ? "Sign in" : "Sign up"}</button>
             </div>
