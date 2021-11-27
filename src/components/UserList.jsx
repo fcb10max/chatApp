@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, useChatChannel, useChatContext } from "stream-chat-react";
+import { Avatar, useChatContext } from "stream-chat-react";
 
 import { InviteIcon } from "../assets";
 
